@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import { globalRoutes } from "./routes";
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-// app.use("/api/v1", globalRoutes);
+app.use("/api/v1", globalRoutes);
 
 app.use(globalErrorHandler);
 

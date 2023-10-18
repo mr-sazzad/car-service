@@ -9,3 +9,104 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+//address to user
+model User {
+  id           String     @id @default(uuid())
+  name         String?
+  role         Role       @default(user)
+  email        String     @unique
+  password     String
+  contactNo    String?
+  gender       String?
+  bloodGroup   String?
+  profileImage String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  Cart         Cart[]
+  Feedbacks    Feedback[]
+  Reviews      Review[]
+}
+
+model Cart {
+  id            String   @id @default(uuid())
+  service       String
+  status        Status   @default(pending)
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  confirmedDate String?
+}
+
+model Feedback {
+  id         String   @id @default(uuid())
+  comment    String?
+  suggestion String?
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Service {
+  id          String        @id @default(uuid())
+  title       String
+  price       String
+  status      ServiceStatus @default(current)
+  description String
+  image       String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Reviews     Review[]
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int
+  review    String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  serviceId String
+  service   Service  @relation(fields: [serviceId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Blog {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  image     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SuperAdmin {
+  id           String  @id @default(uuid())
+  name         String
+  email        String  @unique
+  password     String
+  age          String
+  address      String
+  role         Role    @default(super_admin)
+  profileImage String?
+}
+
+enum Role {
+  admin
+  user
+  super_admin
+}
+
+enum Status {
+  in_progress
+  pending
+  cancelled
+  completed
+}
+
+enum ServiceStatus {
+  up_coming
+  current
+}
