@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { BlogRoutes } from "../app/blog/blogRoutes";
 import { CartRoutes } from "../app/cart/cartRoutes";
 import { feedbackRoutes } from "../app/feedbacks/feedbackRoutes";
 import { ReviewsRoutes } from "../app/review/reviewRoutes";
@@ -16,5 +17,7 @@ router.use("/cart", CartRoutes);
 router.use("/reviews", ReviewsRoutes);
 
 router.use("/feedbacks", feedbackRoutes);
+
+router.use("/blogs", BlogRoutes);
 
 export const globalRoutes = router;
