@@ -65,8 +65,8 @@ export const getAllUsers: RequestHandler = async (req, res, next) => {
 
 export const getAllAdmins: RequestHandler = async (req, res, next) => {
   try {
-    const token = req.headers.authorization;
-    const result = await UserServices.getAllAdmins(token as string);
+    const token = req.headers.authorization as string;
+    const result = await UserServices.getAllAdmins(token);
 
     res.status(201).json({
       status: 201,

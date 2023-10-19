@@ -1,4 +1,4 @@
-import { SuperAdmin, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import prisma from "../../libs/prisma";
 import ApiError from "../errors/apiErrors";
 
@@ -28,10 +28,11 @@ const createAdmin = async (admin: User): Promise<User | null> => {
   return result;
 };
 
-const getSuperAdmin = async (id: string): Promise<SuperAdmin | null> => {
-  const result = await prisma.superAdmin.findUnique({
+const getSuperAdmin = async (id: string): Promise<User | null> => {
+  const result = await prisma.user.findUnique({
     where: {
       id,
+      role: "super_admin",
     },
   });
 
@@ -42,17 +43,17 @@ const getSuperAdmin = async (id: string): Promise<SuperAdmin | null> => {
 
 const updateSuperAdmin = async (
   id: string,
-  data: Partial<SuperAdmin>
-): Promise<SuperAdmin | null> => {
-  const isSuperAdminExist = await prisma.superAdmin.findFirst({
+  data: Partial<User>
+): Promise<User | null> => {
+  const isSuperAdminExist = await prisma.user.findFirst({
     where: {
       id,
     },
   });
 
-  if (!isSuperAdminExist) throw new ApiError(409, "Super Admin already exists");
+  if (!isSuperAdminExist) throw new ApiError(409, "Unable to find");
 
-  const result = await prisma.superAdmin.update({
+  const result = await prisma.user.update({
     where: {
       id,
     },

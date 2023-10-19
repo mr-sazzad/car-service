@@ -28,7 +28,7 @@ const createUser = async (token: string, user: User): Promise<User | null> => {
 
     const decodeToken = jwt.decode(token) as JwtPayload;
 
-    if (decodeToken?.role === "super_admin") {
+    if (decodeToken?.role !== "super_admin") {
       throw new ApiError(409, "Unauthorized access");
     }
   }
@@ -64,6 +64,10 @@ const loginUser = async (credentials: ICredentials) => {
       email,
     },
   });
+
+  if (isUserExist?.isBanned) {
+    throw new ApiError(403, `User ${credentials.email} is Banned`);
+  }
 
   if (!isUserExist) {
     throw new ApiError(404, `User ${credentials.email} does not exist`);
@@ -135,7 +139,7 @@ const getAllAdmins = async (token: string) => {
 
   const decodeToken = jwt.decode(token) as JwtPayload;
 
-  if (decodeToken?.role === "super_admin") {
+  if (decodeToken?.role !== "super_admin") {
     throw new ApiError(409, "Unauthorized access");
   }
 

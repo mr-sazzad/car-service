@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { Roles } from "../../types";
 import auth from "../middlewares/auth";
+import validateRequest from "../middlewares/validateRequest";
 import {
   createUser,
   getAllAdmins,
@@ -9,10 +10,11 @@ import {
   loginUser,
   updateSingleUser,
 } from "./userController";
+import { create, update } from "./userValidation";
 
 const router = Router();
 
-router.post("/sign-up", createUser);
+router.post("/sign-up", validateRequest(create), createUser);
 
 router.post("/login", loginUser);
 
@@ -22,6 +24,6 @@ router.get("/", getAllUsers);
 
 router.get("/:id", getSingleUser);
 
-router.patch("/:id", updateSingleUser);
+router.patch("/:id", validateRequest(update), updateSingleUser);
 
 export const UserRoutes = router;
