@@ -120,7 +120,11 @@ const getSingleUser = async (id: string) => {
 };
 
 const getAllUsers = async () => {
-  const result = await prisma.user.findMany({});
+  const result = await prisma.user.findMany({
+    where: {
+      role: "user",
+    },
+  });
 
   if (!result) throw new ApiError(404, "User not found");
 

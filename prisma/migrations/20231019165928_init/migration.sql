@@ -7,6 +7,9 @@ CREATE TYPE "Status" AS ENUM ('in_progress', 'pending', 'cancelled', 'completed'
 -- CreateEnum
 CREATE TYPE "ServiceStatus" AS ENUM ('up_coming', 'current');
 
+-- CreateEnum
+CREATE TYPE "Gender" AS ENUM ('Male', 'Female', 'Others');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -15,9 +18,10 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "contactNo" TEXT,
-    "gender" TEXT,
+    "gender" "Gender",
     "bloodGroup" TEXT,
     "profileImage" TEXT,
+    "isBanned" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -81,32 +85,15 @@ CREATE TABLE "Blog" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
-    "image" TEXT NOT NULL,
+    "image" TEXT DEFAULT '',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Blog_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "SuperAdmin" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
-    "age" TEXT NOT NULL,
-    "address" TEXT NOT NULL,
-    "role" "Role" NOT NULL DEFAULT 'super_admin',
-    "profileImage" TEXT,
-
-    CONSTRAINT "SuperAdmin_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "SuperAdmin_email_key" ON "SuperAdmin"("email");
 
 -- AddForeignKey
 ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

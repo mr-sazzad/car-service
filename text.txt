@@ -1,0 +1,30 @@
+password=jMjn4K0nN9tG9XdP
+https://car-service-backend-c2wk5n4wh-mr-sazzad.vercel.app
+
+const corsOptions = {
+  origin: true,
+  credentials: true,
+}
+app.use('*', cors(corsOptions))
+
+
+{
+  "routes": [
+    { "src": "/(.*)", "dest": "/" }
+  ]
+}
+
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+aiven=postgres://avnadmin:AVNS_rKpiaAYtQ0eIhw9KjFd@pg-25203e80-sazzadkarim01-3533.a.aivencloud.com:16418/defaultdb?sslmode=require
