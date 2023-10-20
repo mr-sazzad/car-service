@@ -3,6 +3,7 @@ import { Roles } from "../../types";
 import auth from "../middlewares/auth";
 import validateRequest from "../middlewares/validateRequest";
 import {
+  createAdmin,
   createUser,
   getAllAdmins,
   getAllUsers,
@@ -15,6 +16,8 @@ import { create, update } from "./userValidation";
 const router = Router();
 
 router.post("/sign-up", validateRequest(create), createUser);
+
+router.post("/create-admin", validateRequest(create), createAdmin);
 
 router.post("/login", loginUser);
 

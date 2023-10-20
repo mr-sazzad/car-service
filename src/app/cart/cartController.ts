@@ -50,7 +50,8 @@ export const getAllPendingCarts: RequestHandler = async (req, res, next) => {
 export const getSingleFromCart: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await CartServices.getSingleFromCart(id);
+    const token = req.headers.authorization as string;
+    const result = await CartServices.getSingleFromCart(token, id);
 
     res.status(201).json({
       status: 201,

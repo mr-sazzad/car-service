@@ -56,6 +56,49 @@ const createUser = async (token: string, user: User): Promise<User | null> => {
   return result;
 };
 
+const createAdmin = async (token: string, user: User): Promise<User | null> => {
+  const email = user.email;
+
+  if (user.role === "admin") {
+    if (!token) {
+      throw new ApiError(409, "Unauthorized access");
+    }
+    const verify = jwtHelpers.verifyToken(token, SECRET as string);
+
+    if (!verify) {
+      throw new ApiError(409, "Unauthorized access");
+    }
+
+    const decodeToken = jwt.decode(token) as JwtPayload;
+
+    if (decodeToken?.role !== "super_admin") {
+      throw new ApiError(409, "Unauthorized access");
+    }
+  }
+
+  if (user.role === "super_admin") {
+    throw new ApiError(409, "Unauthorized access");
+  }
+
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (isUserExist) throw new ApiError(409, "Conflict Credentials");
+
+  user.password = await bcryptjs.hash(user.password, 12);
+
+  const result = await prisma.user.create({
+    data: user,
+  });
+
+  if (!result) throw new ApiError(500, "Internal Server Error");
+
+  return result;
+};
+
 const loginUser = async (credentials: ICredentials) => {
   const email = credentials.email;
 
@@ -181,4 +224,5 @@ export const UserServices = {
   getAllUsers,
   updateSingleUser,
   getAllAdmins,
+  createAdmin,
 };

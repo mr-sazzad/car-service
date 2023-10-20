@@ -69,10 +69,28 @@ const getAllFromCart = async (token: string): Promise<Cart[] | null> => {
   return result;
 };
 
-const getSingleFromCart = async (id: string): Promise<Cart | null> => {
+const getSingleFromCart = async (
+  token: string,
+  id: string
+): Promise<Cart | null> => {
+  if (!token) throw new ApiError(400, "Bad request");
+
+  const decodedToken = jwt.decode(token);
+
+  const { userId } = decodedToken as JwtPayload;
+
+  const user = await prisma.user.findFirst({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) throw new ApiError(400, "Bad Request");
+
   const result = await prisma.cart.findFirst({
     where: {
       service: id,
+      userId,
     },
   });
 

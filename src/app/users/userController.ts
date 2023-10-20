@@ -17,6 +17,22 @@ export const createUser: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const createAdmin: RequestHandler = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization as string;
+    const user = req.body;
+    const result = await UserServices.createAdmin(token, user);
+
+    res.status(201).json({
+      status: 201,
+      message: "Admin Created Successfully",
+      data: result,
+    });
+  } catch (err: any) {
+    next(err);
+  }
+};
+
 export const loginUser: RequestHandler = async (req, res, next) => {
   try {
     const credentials = req.body;
